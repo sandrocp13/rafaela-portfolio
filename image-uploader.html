@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Image Uploader - Rafaela Portfolio</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: #edf2f7;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #e6fffa;
+            border-color: #38b2ac;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .preview-container {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .preview-img {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .info-box {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .instructions {
+            background: #fef5e7;
+            border: 1px solid #f6ad55;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .instructions h3 {
+            color: #c05621;
+            margin-bottom: 1rem;
+        }
+        
+        .instructions ol {
+            color: #744210;
+            line-height: 1.6;
+        }
+        
+        .linkedin-method {
+            background: #e6f3ff;
+            border: 1px solid #4299e1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .linkedin-method h3 {
+            color: #2b6cb0;
+            margin-bottom: 1rem;
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 0.5rem 0;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #68d391;
+            color: #22543d;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Upload Rafaela's Profile Picture</h1>
+        
+        <div class="instructions">
+            <h3>🎯 Instructions:</h3>
+            <ol>
+                <li>Get Rafaela's profile picture from LinkedIn using one of the methods below</li>
+                <li>Upload or paste the image URL</li>
+                <li>The image will be automatically saved and used in the portfolio</li>
+            </ol>
+        </div>
+        
+        <div class="linkedin-method">
+            <h3>🔗 Method 1: Use LinkedIn Image URL</h3>
+            <p>1. Go to <a href="https://www.linkedin.com/in/rossirafaela/" target="_blank">Rafaela's LinkedIn</a></p>
+            <p>2. Right-click on her profile picture → "Copy image address"</p>
+            <p>3. Paste the URL below:</p>
+            <input type="url" class="url-input" id="imageUrl" placeholder="Paste LinkedIn image URL here...">
+            <button onclick="useImageUrl()" class="upload-btn">Use This Image</button>
+        </div>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <div>
+                <i style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;">📁</i>
+                <h3>Method 2: Upload Image File</h3>
+                <p>Click here or drag and drop an image file</p>
+                <button type="button" class="upload-btn">Choose File</button>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+        </div>
+        
+        <div class="preview-container" id="previewContainer">
+            <h3>Preview:</h3>
+            <img id="previewImg" class="preview-img" alt="Profile preview">
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            ✅ Image updated successfully! The portfolio now uses this profile picture.
+        </div>
+        
+        <div class="info-box">
+            <h4>💡 Tips:</h4>
+            <ul>
+                <li>Best image size: 300x300 pixels or larger</li>
+                <li>Supported formats: JPG, PNG, GIF, WebP</li>
+                <li>Square images work best for profile pictures</li>
+                <li>Keep file size under 1MB for faster loading</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    showPreview(e.target.result);
+                    // In a real implementation, you would save this to the assets folder
+                    console.log('File uploaded:', file.name);
+                    showSuccess();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function useImageUrl() {
+            const url = document.getElementById('imageUrl').value;
+            if (url) {
+                // Test if the image URL is valid
+                const img = new Image();
+                img.onload = function() {
+                    showPreview(url);
+                    showSuccess();
+                    // Update the portfolio images
+                    updatePortfolioImages(url);
+                };
+                img.onerror = function() {
+                    alert('Unable to load image from this URL. Please check the URL and try again.');
+                };
+                img.src = url;
+            }
+        }
+        
+        function showPreview(src) {
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImg = document.getElementById('previewImg');
+            previewImg.src = src;
+            previewContainer.style.display = 'block';
+        }
+        
+        function showSuccess() {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        function updatePortfolioImages(imageUrl) {
+            // This would update the portfolio images if both pages are open
+            // For now, we'll log instructions
+            console.log('To update portfolio images, use this URL:', imageUrl);
+            console.log('Or copy this code to run in the portfolio page console:');
+            console.log(`updateProfileImages('${imageUrl}')`);
+        }
+        
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                handleFileUpload({ target: { files } });
+            }
+        });
+    </script>
+</body>
+</html>

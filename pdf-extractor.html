@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Content Extractor - Portfolio Enhancement</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .upload-section {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            background: #edf2f7;
+            border-color: #764ba2;
+        }
+        
+        .upload-section.dragover {
+            background: #e6fffa;
+            border-color: #38b2ac;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .preview-section {
+            display: none;
+            margin: 2rem 0;
+        }
+        
+        .pdf-preview {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .extracted-content {
+            background: #fef5e7;
+            border: 1px solid #f6ad55;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .content-section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .content-section h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .content-section textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .content-section textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #68d391;
+            color: #22543d;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .instructions {
+            background: #e6f3ff;
+            border: 1px solid #4299e1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .instructions h3 {
+            color: #2b6cb0;
+            margin-bottom: 1rem;
+        }
+        
+        .instructions ul {
+            color: #2c5282;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 PDF Content Extractor</h1>
+        <p style="text-align: center; color: #718096; margin-bottom: 2rem;">
+            Upload Rafaela's resume/CV to automatically extract and improve portfolio content
+        </p>
+        
+        <div class="instructions">
+            <h3>🎯 How it works:</h3>
+            <ul>
+                <li>Upload a PDF resume/CV file</li>
+                <li>The content will be extracted and parsed</li>
+                <li>Review and edit the extracted information</li>
+                <li>Apply changes to update the portfolio website</li>
+                <li>The system will intelligently map resume sections to portfolio sections</li>
+            </ul>
+        </div>
+        
+        <div class="upload-section" onclick="document.getElementById('pdfInput').click()">
+            <div>
+                <i style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;">📄</i>
+                <h3>Upload PDF Resume/CV</h3>
+                <p>Click here or drag and drop a PDF file</p>
+                <button type="button" class="upload-btn">Choose PDF File</button>
+            </div>
+            <input type="file" id="pdfInput" accept=".pdf" onchange="handlePDFUpload(event)">
+        </div>
+        
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p>Processing PDF and extracting content...</p>
+        </div>
+        
+        <div class="preview-section" id="previewSection">
+            <h2>📋 Extracted Content</h2>
+            <p style="color: #718096; margin-bottom: 1rem;">
+                Review and edit the extracted information below, then apply changes to your portfolio.
+            </p>
+            
+            <div class="content-section">
+                <h3>👤 Personal Information</h3>
+                <textarea id="personalInfo" placeholder="Name, title, contact information..."></textarea>
+            </div>
+            
+            <div class="content-section">
+                <h3>📝 Professional Summary/About</h3>
+                <textarea id="aboutText" placeholder="Professional summary, bio, objectives..."></textarea>
+            </div>
+            
+            <div class="content-section">
+                <h3>💼 Work Experience</h3>
+                <textarea id="experienceText" placeholder="Job titles, companies, dates, descriptions..."></textarea>
+            </div>
+            
+            <div class="content-section">
+                <h3>🛠️ Skills & Technologies</h3>
+                <textarea id="skillsText" placeholder="Technical skills, programming languages, tools..."></textarea>
+            </div>
+            
+            <div class="content-section">
+                <h3>🎓 Education</h3>
+                <textarea id="educationText" placeholder="Degrees, certifications, courses..."></textarea>
+            </div>
+            
+            <div class="content-section">
+                <h3>🚀 Projects</h3>
+                <textarea id="projectsText" placeholder="Project names, descriptions, technologies used..."></textarea>
+            </div>
+            
+            <div class="action-buttons">
+                <button onclick="applyToPortfolio()" class="upload-btn">Apply to Portfolio</button>
+                <button onclick="downloadJSON()" class="upload-btn btn-secondary">Download as JSON</button>
+                <button onclick="reset()" class="upload-btn btn-secondary">Reset</button>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            ✅ Portfolio content updated successfully! Check your portfolio website to see the changes.
+        </div>
+        
+        <div class="pdf-preview" id="pdfPreview" style="display: none;">
+            <h3>📄 PDF Preview</h3>
+            <canvas id="pdfCanvas" style="max-width: 100%; border: 1px solid #e2e8f0;"></canvas>
+        </div>
+    </div>
+
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <script>
+        let extractedData = {};
+        
+        // Configure PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        function handlePDFUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                showLoading(true);
+                extractPDFContent(file);
+            } else {
+                alert('Please select a valid PDF file.');
+            }
+        }
+        
+        async function extractPDFContent(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                
+                let fullText = '';
+                
+                // Extract text from all pages
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n';
+                }
+                
+                // Process and categorize the extracted text
+                parseResumeContent(fullText);
+                
+                // Show preview of first page
+                showPDFPreview(pdf);
+                
+                showLoading(false);
+                document.getElementById('previewSection').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error processing PDF:', error);
+                alert('Error processing PDF. Please try again.');
+                showLoading(false);
+            }
+        }
+        
+        function parseResumeContent(text) {
+            // Clean and normalize text
+            const cleanText = text.replace(/\s+/g, ' ').trim();
+            
+            // Extract different sections using keywords and patterns
+            extractedData = {
+                personal: extractPersonalInfo(cleanText),
+                about: extractAboutSection(cleanText),
+                experience: extractExperience(cleanText),
+                skills: extractSkills(cleanText),
+                education: extractEducation(cleanText),
+                projects: extractProjects(cleanText)
+            };
+            
+            // Populate the form fields
+            populateFields();
+        }
+        
+        function extractPersonalInfo(text) {
+            // Extract name, email, phone, etc.
+            const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+            const phoneMatch = text.match(/(\+?1?[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/);
+            
+            return {
+                email: emailMatch ? emailMatch[0] : '',
+                phone: phoneMatch ? phoneMatch[0] : '',
+                text: text.substring(0, 200) // First 200 chars usually contain personal info
+            };
+        }
+        
+        function extractAboutSection(text) {
+            // Look for summary, objective, or about sections
+            const summaryKeywords = ['summary', 'objective', 'about', 'profile', 'overview'];
+            
+            for (const keyword of summaryKeywords) {
+                const regex = new RegExp(keyword + '[\\s\\S]{0,500}', 'i');
+                const match = text.match(regex);
+                if (match) {
+                    return match[0];
+                }
+            }
+            
+            // If no specific section, return first paragraph
+            return text.split('\n')[0];
+        }
+        
+        function extractExperience(text) {
+            // Look for experience section
+            const expKeywords = ['experience', 'employment', 'work history', 'professional experience'];
+            
+            for (const keyword of expKeywords) {
+                const regex = new RegExp(keyword + '[\\s\\S]{0,1000}', 'i');
+                const match = text.match(regex);
+                if (match) {
+                    return match[0];
+                }
+            }
+            
+            return '';
+        }
+        
+        function extractSkills(text) {
+            // Look for skills section and common technical terms
+            const skillsKeywords = ['skills', 'technologies', 'technical skills', 'competencies'];
+            const techTerms = ['javascript', 'python', 'react', 'node', 'html', 'css', 'sql', 'java', 'c++', 'angular', 'vue'];
+            
+            let skillsText = '';
+            
+            // Find skills section
+            for (const keyword of skillsKeywords) {
+                const regex = new RegExp(keyword + '[\\s\\S]{0,500}', 'i');
+                const match = text.match(regex);
+                if (match) {
+                    skillsText += match[0] + '\n';
+                }
+            }
+            
+            // Find scattered technical terms
+            const foundTech = techTerms.filter(term => 
+                text.toLowerCase().includes(term.toLowerCase())
+            );
+            
+            if (foundTech.length > 0) {
+                skillsText += '\nTechnologies found: ' + foundTech.join(', ');
+            }
+            
+            return skillsText;
+        }
+        
+        function extractEducation(text) {
+            const eduKeywords = ['education', 'academic', 'degree', 'university', 'college', 'certification'];
+            
+            for (const keyword of eduKeywords) {
+                const regex = new RegExp(keyword + '[\\s\\S]{0,300}', 'i');
+                const match = text.match(regex);
+                if (match) {
+                    return match[0];
+                }
+            }
+            
+            return '';
+        }
+        
+        function extractProjects(text) {
+            const projectKeywords = ['projects', 'portfolio', 'work samples', 'achievements'];
+            
+            for (const keyword of projectKeywords) {
+                const regex = new RegExp(keyword + '[\\s\\S]{0,800}', 'i');
+                const match = text.match(regex);
+                if (match) {
+                    return match[0];
+                }
+            }
+            
+            return '';
+        }
+        
+        function populateFields() {
+            document.getElementById('personalInfo').value = extractedData.personal.text;
+            document.getElementById('aboutText').value = extractedData.about;
+            document.getElementById('experienceText').value = extractedData.experience;
+            document.getElementById('skillsText').value = extractedData.skills;
+            document.getElementById('educationText').value = extractedData.education;
+            document.getElementById('projectsText').value = extractedData.projects;
+        }
+        
+        async function showPDFPreview(pdf) {
+            const page = await pdf.getPage(1);
+            const canvas = document.getElementById('pdfCanvas');
+            const context = canvas.getContext('2d');
+            
+            const viewport = page.getViewport({ scale: 0.8 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            
+            await page.render(renderContext).promise;
+            document.getElementById('pdfPreview').style.display = 'block';
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loadingSection').style.display = show ? 'block' : 'none';
+        }
+        
+        function applyToPortfolio() {
+            // Collect all the edited content
+            const portfolioData = {
+                personal: document.getElementById('personalInfo').value,
+                about: document.getElementById('aboutText').value,
+                experience: document.getElementById('experienceText').value,
+                skills: document.getElementById('skillsText').value,
+                education: document.getElementById('educationText').value,
+                projects: document.getElementById('projectsText').value
+            };
+            
+            // Store in localStorage to be picked up by the main portfolio
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Log instructions for manual application
+            console.log('Portfolio data extracted and ready:', portfolioData);
+            console.log('To apply this data to your portfolio, run: applyExtractedData()');
+            
+            // Generate update instructions
+            generateUpdateInstructions(portfolioData);
+        }
+        
+        function generateUpdateInstructions(data) {
+            const instructions = `
+// Copy and paste this code into your portfolio's browser console to apply the extracted data:
+
+function applyExtractedData() {
+    const data = ${JSON.stringify(data, null, 2)};
+    
+    // Update about section
+    const aboutText = document.querySelector('.about-content-text p');
+    if (aboutText && data.about) {
+        aboutText.textContent = data.about;
+    }
+    
+    // Update hero description
+    const heroDesc = document.querySelector('.hero-description');
+    if (heroDesc && data.about) {
+        heroDesc.textContent = data.about;
+    }
+    
+    // Log the data for manual updates
+    console.log('Extracted data:', data);
+    console.log('Apply these updates to your HTML file for permanent changes.');
+}
+
+applyExtractedData();
+            `;
+            
+            console.log(instructions);
+        }
+        
+        function downloadJSON() {
+            const portfolioData = {
+                personal: document.getElementById('personalInfo').value,
+                about: document.getElementById('aboutText').value,
+                experience: document.getElementById('experienceText').value,
+                skills: document.getElementById('skillsText').value,
+                education: document.getElementById('educationText').value,
+                projects: document.getElementById('projectsText').value
+            };
+            
+            const dataStr = JSON.stringify(portfolioData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'portfolio-content.json';
+            link.click();
+        }
+        
+        function reset() {
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('pdfPreview').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('pdfInput').value = '';
+            extractedData = {};
+        }
+        
+        // Drag and drop functionality
+        const uploadSection = document.querySelector('.upload-section');
+        
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+        
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                document.getElementById('pdfInput').files = files;
+                handlePDFUpload({ target: { files } });
+            }
+        });
+    </script>
+</body>
+</html>
