@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Portfolio Integrator - Academic Research Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            padding: 3rem;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .step-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+        
+        .step-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .upload-section {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 3px dashed #d1d5db;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: #f0f5ff;
+        }
+        
+        .upload-section h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .upload-section p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .upload-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .visual-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            border: 2px solid #e9ecef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .category-content {
+            padding: 1.5rem;
+        }
+        
+        .category-examples {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-examples li {
+            color: #666;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+        
+        .category-examples li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .category-select-btn {
+            background: #667eea;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .category-select-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+        
+        .category-select-btn.selected {
+            background: #764ba2;
+        }
+        
+        .preview-section {
+            margin-top: 3rem;
+            display: none;
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .preview-item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-item:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .preview-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .preview-item:hover .preview-overlay {
+            opacity: 1;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .preview-action-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-action-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .preview-details {
+            padding: 1.5rem;
+        }
+        
+        .preview-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preview-category {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .integration-section {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 2px solid #e9ecef;
+        }
+        
+        .integration-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .integration-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .integration-option {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .integration-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .integration-option i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .integration-option h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .integration-option p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .nav-btn {
+            background: #6c757d;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+        
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .nav-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .portfolio-mapping {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 2px solid #e9ecef;
+        }
+        
+        .mapping-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .mapping-item .image-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 1rem;
+        }
+        
+        .mapping-item .content {
+            flex: 1;
+        }
+        
+        .mapping-item .title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.3rem;
+        }
+        
+        .mapping-item .target {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .visual-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-images"></i> Visual Portfolio Integrator</h1>
+            <p>Extract, organize, and showcase clean visual examples from your academic research and professional work</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Workflow Steps -->
+            <div class="workflow-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📄</div>
+                    <h3 class="step-title">Extract from PDFs</h3>
+                    <p class="step-description">
+                        Take screenshots or extract diagrams, charts, and interface designs 
+                        from your academic papers, coursework, and research documents.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">🎨</div>
+                    <h3 class="step-title">Upload & Categorize</h3>
+                    <p class="step-description">
+                        Upload your visual examples and categorize them by type: research diagrams, 
+                        interface designs, data visualizations, or system architecture.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">✨</div>
+                    <h3 class="step-title">Optimize & Preview</h3>
+                    <p class="step-description">
+                        Add titles, descriptions, and context. Preview how your visuals 
+                        will appear in the portfolio research artifacts section.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">🔗</div>
+                    <h3 class="step-title">Integrate to Portfolio</h3>
+                    <p class="step-description">
+                        Apply the visuals to your portfolio, replacing placeholder icons 
+                        with real examples from your academic and professional work.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Visual Category Selection -->
+            <div class="visual-categories">
+                <div class="category-card" data-category="research">
+                    <div class="category-header">
+                        <div class="category-icon">📊</div>
+                        <h3 class="category-title">Research Diagrams</h3>
+                        <p class="category-description">Frameworks, methodologies, and analytical models</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>HCI research frameworks</li>
+                            <li>Methodology flowcharts</li>
+                            <li>Conceptual models</li>
+                            <li>Theoretical diagrams</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('research')">
+                            Select Research Content
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="category-card" data-category="interface">
+                    <div class="category-header">
+                        <div class="category-icon">🎨</div>
+                        <h3 class="category-title">Interface Designs</h3>
+                        <p class="category-description">UI/UX designs, prototypes, and accessibility examples</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>UI/UX mockups</li>
+                            <li>Wireframes & prototypes</li>
+                            <li>Accessibility designs</li>
+                            <li>Speech interface designs</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('interface')">
+                            Select Interface Designs
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="category-card" data-category="data">
+                    <div class="category-header">
+                        <div class="category-icon">📈</div>
+                        <h3 class="category-title">Data Visualizations</h3>
+                        <p class="category-description">Charts, analytics, and statistical presentations</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>Research data charts</li>
+                            <li>Statistical analyses</li>
+                            <li>User behavior data</li>
+                            <li>Business metrics</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('data')">
+                            Select Data Visuals
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="category-card" data-category="architecture">
+                    <div class="category-header">
+                        <div class="category-icon">🏗️</div>
+                        <h3 class="category-title">System Architecture</h3>
+                        <p class="category-description">Technical diagrams, workflows, and system designs</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>System architecture</li>
+                            <li>Database schemas</li>
+                            <li>Technical workflows</li>
+                            <li>Process diagrams</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('architecture')">
+                            Select Architecture
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="category-card" data-category="process">
+                    <div class="category-header">
+                        <div class="category-icon">🔄</div>
+                        <h3 class="category-title">Process Flows</h3>
+                        <p class="category-description">User journeys, workflows, and interaction patterns</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>User journey maps</li>
+                            <li>Business process flows</li>
+                            <li>Customer interactions</li>
+                            <li>Workflow diagrams</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('process')">
+                            Select Process Flows
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="category-card" data-category="evaluation">
+                    <div class="category-header">
+                        <div class="category-icon">🧪</div>
+                        <h3 class="category-title">Evaluation Frameworks</h3>
+                        <p class="category-description">Testing protocols, assessments, and evaluation tools</p>
+                    </div>
+                    <div class="category-content">
+                        <ul class="category-examples">
+                            <li>Usability testing frameworks</li>
+                            <li>Heuristic evaluations</li>
+                            <li>Assessment matrices</li>
+                            <li>Evaluation protocols</li>
+                        </ul>
+                        <button class="category-select-btn" onclick="selectCategory('evaluation')">
+                            Select Evaluation Tools
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadArea">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Upload Visual Examples</h3>
+                <p>Drag and drop images from your academic documents or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*" multiple>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-folder-open"></i> Choose Images
+                </button>
+                <button class="upload-btn" onclick="captureScreenshot()">
+                    <i class="fas fa-camera"></i> Capture Screenshot
+                </button>
+            </div>
+            
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Visual content uploaded successfully! 
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="preview-section" id="previewSection">
+                <h3><i class="fas fa-eye"></i> Visual Content Preview</h3>
+                <div class="preview-grid" id="previewGrid">
+                    <!-- Uploaded images will appear here -->
+                </div>
+            </div>
+            
+            <!-- Portfolio Integration -->
+            <div class="integration-section" id="integrationSection" style="display: none;">
+                <h3 class="integration-title">
+                    <i class="fas fa-link"></i> Portfolio Integration
+                </h3>
+                <p>Your visual examples are ready to be integrated into the portfolio. Choose how to apply them:</p>
+                
+                <div class="integration-options">
+                    <div class="integration-option" onclick="integrateToPortfolio('research-artifacts')">
+                        <i class="fas fa-flask"></i>
+                        <h4>Research Artifacts Section</h4>
+                        <p>Add to the research artifacts grid in the publications section</p>
+                    </div>
+                    
+                    <div class="integration-option" onclick="integrateToPortfolio('project-visuals')">
+                        <i class="fas fa-project-diagram"></i>
+                        <h4>Project Visual Notes</h4>
+                        <p>Replace project placeholder icons with your actual work examples</p>
+                    </div>
+                    
+                    <div class="integration-option" onclick="generatePortfolioCode()">
+                        <i class="fas fa-code"></i>
+                        <h4>Generate HTML Code</h4>
+                        <p>Generate ready-to-use HTML code for manual integration</p>
+                    </div>
+                    
+                    <div class="integration-option" onclick="downloadVisuals()">
+                        <i class="fas fa-download"></i>
+                        <h4>Download Package</h4>
+                        <p>Download organized visual package with integration instructions</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-mapping" id="portfolioMapping">
+                    <h4><i class="fas fa-map"></i> Portfolio Integration Mapping</h4>
+                    <div id="mappingItems">
+                        <!-- Mapping items will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+            <a href="pdf-extractor.html" class="nav-btn">
+                <i class="fas fa-file-pdf"></i> PDF Text Extractor
+            </a>
+            <a href="#" class="nav-btn primary" onclick="applyToPortfolio()">
+                <i class="fas fa-magic"></i> Apply to Portfolio
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        let selectedCategory = null;
+        let uploadedImages = [];
+        let portfolioMappings = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadExistingData();
+        });
+        
+        function setupEventListeners() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+                handleFiles(files);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                handleFiles(files);
+            });
+        }
+        
+        function selectCategory(category) {
+            selectedCategory = category;
+            
+            // Update button states
+            document.querySelectorAll('.category-select-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            const selectedCard = document.querySelector(`[data-category="${category}"]`);
+            selectedCard.querySelector('.category-select-btn').classList.add('selected');
+            
+            // Show upload section
+            document.getElementById('uploadArea').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            if (!selectedCategory) {
+                alert('Please select a visual category first!');
+                return;
+            }
+            
+            document.getElementById('previewSection').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    createPreviewItem(e.target.result, file.name, index);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        }
+        
+        function createPreviewItem(imageSrc, fileName, index) {
+            const imageData = {
+                id: Date.now() + index,
+                src: imageSrc,
+                name: fileName,
+                category: selectedCategory,
+                title: generateTitle(fileName, selectedCategory),
+                description: generateDescription(selectedCategory),
+                targetSection: getTargetSection(selectedCategory)
+            };
+            
+            uploadedImages.push(imageData);
+            
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.innerHTML = `
+                <div class="preview-image-container">
+                    <img src="${imageSrc}" alt="${fileName}" class="preview-image">
+                    <div class="preview-overlay">
+                        <div class="preview-actions">
+                            <button class="preview-action-btn" onclick="editImage(${imageData.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="preview-action-btn" onclick="deleteImage(${imageData.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="preview-action-btn" onclick="fullScreenPreview('${imageSrc}')" title="View Full Size">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-details">
+                    <div class="preview-category">${getCategoryDisplayName(selectedCategory)}</div>
+                    <div class="preview-title" contenteditable="true" onblur="updateImageData(${imageData.id}, 'title', this.textContent)">
+                        ${imageData.title}
+                    </div>
+                    <div class="preview-description" contenteditable="true" onblur="updateImageData(${imageData.id}, 'description', this.textContent)">
+                        ${imageData.description}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('previewGrid').appendChild(previewItem);
+            
+            // Show integration section if we have images
+            if (uploadedImages.length > 0) {
+                document.getElementById('integrationSection').style.display = 'block';
+                updatePortfolioMapping();
+            }
+        }
+        
+        function generateTitle(fileName, category) {
+            const baseName = fileName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+            const categoryTitles = {
+                'research': 'Research Framework: ',
+                'interface': 'Interface Design: ',
+                'data': 'Data Analysis: ',
+                'architecture': 'System Architecture: ',
+                'process': 'Process Flow: ',
+                'evaluation': 'Evaluation Method: '
+            };
+            return categoryTitles[category] + baseName;
+        }
+        
+        function generateDescription(category) {
+            const categoryDescriptions = {
+                'research': 'Methodological framework demonstrating research approach and analytical structure',
+                'interface': 'User interface design showcasing accessibility principles and interaction patterns',
+                'data': 'Statistical visualization presenting research findings and analytical insights',
+                'architecture': 'Technical architecture diagram outlining system design and implementation',
+                'process': 'Workflow visualization mapping user journey and process optimization',
+                'evaluation': 'Evaluation framework demonstrating assessment methodology and testing protocols'
+            };
+            return categoryDescriptions[category];
+        }
+        
+        function getCategoryDisplayName(category) {
+            const displayNames = {
+                'research': 'Research Diagrams',
+                'interface': 'Interface Design',
+                'data': 'Data Visualization',
+                'architecture': 'System Architecture',
+                'process': 'Process Flow',
+                'evaluation': 'Evaluation Framework'
+            };
+            return displayNames[category];
+        }
+        
+        function getTargetSection(category) {
+            const sectionMappings = {
+                'research': 'Research Artifacts Section',
+                'interface': 'INM313 Speech Interface / INM401 Accessibility',
+                'data': 'Better.com Analytics / Spotify Metrics',
+                'architecture': 'SG Law System Design / Enterprise Architecture',
+                'process': 'User Journey Maps / Business Process',
+                'evaluation': 'INM315 UI Evaluation / Usability Testing'
+            };
+            return sectionMappings[category];
+        }
+        
+        function updateImageData(id, field, value) {
+            const image = uploadedImages.find(img => img.id === id);
+            if (image) {
+                image[field] = value;
+                updatePortfolioMapping();
+            }
+        }
+        
+        function editImage(id) {
+            const image = uploadedImages.find(img => img.id === id);
+            if (image) {
+                const newTitle = prompt('Edit title:', image.title);
+                const newDescription = prompt('Edit description:', image.description);
+                if (newTitle !== null) image.title = newTitle;
+                if (newDescription !== null) image.description = newDescription;
+                refreshPreview();
+            }
+        }
+        
+        function deleteImage(id) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                uploadedImages = uploadedImages.filter(img => img.id !== id);
+                refreshPreview();
+                updatePortfolioMapping();
+            }
+        }
+        
+        function fullScreenPreview(src) {
+            // Create modal for full-screen preview
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.9); display: flex; align-items: center; 
+                justify-content: center; z-index: 9999; cursor: pointer;
+            `;
+            modal.innerHTML = `<img src="${src}" style="max-width: 90%; max-height: 90%; object-fit: contain;">`;
+            modal.onclick = () => document.body.removeChild(modal);
+            document.body.appendChild(modal);
+        }
+        
+        function refreshPreview() {
+            document.getElementById('previewGrid').innerHTML = '';
+            uploadedImages.forEach((img, index) => {
+                createPreviewItem(img.src, img.name, index);
+            });
+        }
+        
+        function updatePortfolioMapping() {
+            const mappingContainer = document.getElementById('mappingItems');
+            mappingContainer.innerHTML = '';
+            
+            uploadedImages.forEach(image => {
+                const mappingItem = document.createElement('div');
+                mappingItem.className = 'mapping-item';
+                mappingItem.innerHTML = `
+                    <img src="${image.src}" alt="${image.title}" class="image-preview">
+                    <div class="content">
+                        <div class="title">${image.title}</div>
+                        <div class="target">→ ${image.targetSection}</div>
+                    </div>
+                `;
+                mappingContainer.appendChild(mappingItem);
+            });
+        }
+        
+        function captureScreenshot() {
+            alert('Screenshot feature: Use your browser\'s screenshot tools or operating system capture tools to take screenshots of PDF content, then upload the images using the "Choose Images" button.');
+        }
+        
+        function integrateToPortfolio(targetArea) {
+            if (uploadedImages.length === 0) {
+                alert('Please upload some visual content first!');
+                return;
+            }
+            
+            // Store data for portfolio integration
+            localStorage.setItem('portfolioVisuals', JSON.stringify({
+                images: uploadedImages,
+                targetArea: targetArea,
+                timestamp: Date.now()
+            }));
+            
+            alert(`Integration prepared! ${uploadedImages.length} visual examples are ready to be integrated into the ${targetArea.replace('-', ' ')} area of your portfolio.`);
+        }
+        
+        function generatePortfolioCode() {
+            if (uploadedImages.length === 0) {
+                alert('Please upload some visual content first!');
+                return;
+            }
+            
+            let htmlCode = '<!-- Generated Visual Content Integration Code -->\\n';
+            
+            uploadedImages.forEach(image => {
+                htmlCode += `
+                <div class="artifact-item">
+                    <div class="artifact-preview">
+                        <img src="assets/visuals/${image.name}" alt="${image.title}" class="artifact-image">
+                    </div>
+                    <div class="artifact-details">
+                        <h4>${image.title}</h4>
+                        <p>${image.description}</p>
+                        <div class="artifact-tags">
+                            <span class="artifact-tag">${getCategoryDisplayName(image.category)}</span>
+                        </div>
+                    </div>
+                </div>\\n`;
+            });
+            
+            // Show in a modal or new window
+            const codeWindow = window.open('', '_blank');
+            codeWindow.document.write(`
+                <html>
+                <head><title>Portfolio Integration Code</title></head>
+                <body style="font-family: monospace; padding: 20px;">
+                <h2>Portfolio Integration Code</h2>
+                <p>Copy this HTML code and replace the placeholder artifact items in your portfolio:</p>
+                <textarea style="width: 100%; height: 400px;">${htmlCode}</textarea>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Save your images to the assets/visuals/ folder</li>
+                    <li>Replace the existing artifact-item divs in the Research Artifacts section</li>
+                    <li>Update the CSS if needed for proper styling</li>
+                </ol>
+                </body>
+                </html>
+            `);
+        }
+        
+        function downloadVisuals() {
+            if (uploadedImages.length === 0) {
+                alert('Please upload some visual content first!');
+                return;
+            }
+            
+            // Create download package information
+            const packageInfo = {
+                images: uploadedImages,
+                instructions: 'Portfolio Visual Integration Package',
+                categories: [...new Set(uploadedImages.map(img => img.category))],
+                totalImages: uploadedImages.length,
+                generated: new Date().toISOString()
+            };
+            
+            // Create a text file with instructions
+            const instructions = `
+# Portfolio Visual Integration Package
+Generated: ${new Date().toLocaleString()}
+
+## Package Contents
+- ${uploadedImages.length} visual examples
+- Categories: ${packageInfo.categories.join(', ')}
+
+## Integration Instructions
+1. Save images to your portfolio's assets/visuals/ folder
+2. Update the portfolio HTML with the new artifact items
+3. Ensure proper image paths and alt text
+4. Test responsive design on mobile devices
+
+## Image Mappings
+${uploadedImages.map(img => `- ${img.name} → ${img.title} (${img.targetSection})`).join('\\n')}
+
+## Next Steps
+1. Use the generated HTML code to replace placeholder items
+2. Update navigation and links as needed
+3. Test all visual content displays correctly
+4. Consider adding captions or context as needed
+            `;
+            
+            // Download instructions file
+            const blob = new Blob([instructions], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'visual-integration-instructions.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Download started! Check your downloads folder for the integration instructions.');
+        }
+        
+        function applyToPortfolio() {
+            if (uploadedImages.length === 0) {
+                alert('Please upload some visual content first!');
+                return;
+            }
+            
+            // Store comprehensive data for portfolio application
+            const portfolioData = {
+                visuals: uploadedImages,
+                categories: [...new Set(uploadedImages.map(img => img.category))],
+                mappings: portfolioMappings,
+                timestamp: Date.now(),
+                ready: true
+            };
+            
+            localStorage.setItem('portfolioVisualsReady', JSON.stringify(portfolioData));
+            
+            // Show success and redirect
+            alert(`Success! ${uploadedImages.length} visual examples are ready for integration. Redirecting to portfolio...`);
+            
+            // Optional: Auto-apply if the portfolio supports it
+            setTimeout(() => {
+                window.location.href = 'index.html#publications';
+            }, 1000);
+        }
+        
+        function loadExistingData() {
+            // Load any existing visual data
+            const existingData = localStorage.getItem('portfolioVisualsReady');
+            if (existingData) {
+                const data = JSON.parse(existingData);
+                if (data.visuals && data.visuals.length > 0) {
+                    uploadedImages = data.visuals;
+                    refreshPreview();
+                    document.getElementById('previewSection').style.display = 'block';
+                    document.getElementById('integrationSection').style.display = 'block';
+                    updatePortfolioMapping();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

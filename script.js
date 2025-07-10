@@ -294,7 +294,7 @@ console.log(`
 `);
 
 // Function to update profile images
-function updateProfileImages(https://media.licdn.com/dms/image/v2/D4E03AQFM0meZjec6qA/profile-displayphoto-shrink_800_800/B4EZSNZ8l5G0Aw-/0/1737539177750?e=1757548800&v=beta&t=Bf2zOAwgPLwnLJADgkAClJYzh6y3xNZzA9a5Q-G4hSE) {
+function updateProfileImages(imageUrl) {
     const profileImages = document.querySelectorAll('.profile-img, .about-img');
     profileImages.forEach(img => {
         if (img) {
@@ -507,4 +507,182 @@ function checkForExtractedData() {
     }
 }
 
-//# sourceMappingURL=main.js.map
+// Visual Portfolio Integration
+function loadPortfolioVisuals() {
+    const visualData = localStorage.getItem('portfolioVisualsReady');
+    if (visualData) {
+        const data = JSON.parse(visualData);
+        if (data.ready && data.visuals && data.visuals.length > 0) {
+            integrateVisualExamples(data.visuals);
+        }
+    }
+}
+
+function integrateVisualExamples(visuals) {
+    // Find the artifacts grid
+    const artifactsGrid = document.querySelector('.artifacts-grid');
+    if (!artifactsGrid) return;
+    
+    // Clear existing placeholder items (but keep the structure)
+    const placeholderItems = artifactsGrid.querySelectorAll('.artifact-item');
+    
+    // Replace placeholders with real visual examples
+    visuals.forEach((visual, index) => {
+        if (index < placeholderItems.length) {
+            const item = placeholderItems[index];
+            
+            // Replace placeholder with actual image
+            const previewDiv = item.querySelector('.artifact-preview');
+            if (previewDiv) {
+                previewDiv.innerHTML = `
+                    <div class="artifact-image-container">
+                        <img src="${visual.src}" alt="${visual.title}" class="artifact-image">
+                        <div class="artifact-overlay">
+                            <span class="artifact-category">${getCategoryIcon(visual.category)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Update details
+            const detailsDiv = item.querySelector('.artifact-details');
+            if (detailsDiv) {
+                detailsDiv.innerHTML = `
+                    <h4>${visual.title}</h4>
+                    <p>${visual.description}</p>
+                    <div class="artifact-tags">
+                        <span class="artifact-tag">${getCategoryDisplayName(visual.category)}</span>
+                        <span class="artifact-tag">Academic Work</span>
+                    </div>
+                `;
+            }
+        }
+    });
+    
+    // Add any additional visuals as new items
+    if (visuals.length > placeholderItems.length) {
+        visuals.slice(placeholderItems.length).forEach(visual => {
+            const newItem = createArtifactItem(visual);
+            artifactsGrid.appendChild(newItem);
+        });
+    }
+    
+    // Show success notification
+    showVisualIntegrationNotification(visuals.length);
+}
+
+function createArtifactItem(visual) {
+    const item = document.createElement('div');
+    item.className = 'artifact-item';
+    item.innerHTML = `
+        <div class="artifact-preview">
+            <div class="artifact-image-container">
+                <img src="${visual.src}" alt="${visual.title}" class="artifact-image">
+                <div class="artifact-overlay">
+                    <span class="artifact-category">${getCategoryIcon(visual.category)}</span>
+                </div>
+            </div>
+        </div>
+        <div class="artifact-details">
+            <h4>${visual.title}</h4>
+            <p>${visual.description}</p>
+            <div class="artifact-tags">
+                <span class="artifact-tag">${getCategoryDisplayName(visual.category)}</span>
+                <span class="artifact-tag">Academic Work</span>
+            </div>
+        </div>
+    `;
+    return item;
+}
+
+function getCategoryIcon(category) {
+    const icons = {
+        'research': '📊',
+        'interface': '🎨', 
+        'data': '📈',
+        'architecture': '🏗️',
+        'process': '🔄',
+        'evaluation': '🧪'
+    };
+    return icons[category] || '📋';
+}
+
+function getCategoryDisplayName(category) {
+    const displayNames = {
+        'research': 'Research Framework',
+        'interface': 'Interface Design',
+        'data': 'Data Visualization', 
+        'architecture': 'System Architecture',
+        'process': 'Process Flow',
+        'evaluation': 'Evaluation Method'
+    };
+    return displayNames[category] || 'Academic Work';
+}
+
+function showVisualIntegrationNotification(count) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'visual-integration-notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span>Successfully integrated ${count} visual examples from your academic work!</span>
+            <button onclick="clearVisualNotification()" class="notification-close">×</button>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        z-index: 9999;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideOutRight 0.5s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    document.body.removeChild(notification);
+                }
+            }, 500);
+        }
+    }, 5000);
+}
+
+function clearVisualNotification() {
+    const notification = document.querySelector('.visual-integration-notification');
+    if (notification) {
+        document.body.removeChild(notification);
+    }
+}
+
+// Initialize visual loading when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Load portfolio visuals
+    loadPortfolioVisuals();
+    
+    // Listen for storage changes (when visuals are updated from integrator)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'portfolioVisualsReady') {
+            loadPortfolioVisuals();
+        }
+    });
+});
+
+// Export functions for external use
+window.portfolioVisualIntegration = {
+    loadVisuals: loadPortfolioVisuals,
+    integrateVisuals: integrateVisualExamples,
+    clearNotification: clearVisualNotification
+};

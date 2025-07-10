@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Content Extractor - Portfolio Enhancement</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .visual-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .visual-type-card {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
+        }
+        
+        .visual-type-card:hover {
+            background: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .visual-type-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .visual-type-title {
+            color: #0a0a0a;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .visual-type-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: #f7fafc;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: #edf2f7;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #e6fffa;
+            border-color: #38b2ac;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .preview-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .preview-details {
+            padding: 1rem;
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #0a0a0a;
+        }
+        
+        .preview-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .extraction-tips {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tip-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .navigation {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .nav-btn {
+            background: #0a0a0a;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Visual Content Extractor</h1>
+        <p class="subtitle">Extract and optimize visual examples from your academic documents</p>
+        
+        <!-- Visual Content Types -->
+        <div class="visual-types">
+            <div class="visual-type-card">
+                <div class="visual-type-icon">📊</div>
+                <h3 class="visual-type-title">Research Diagrams</h3>
+                <p class="visual-type-description">
+                    Methodology frameworks, research process flows, and analytical models from your academic work
+                </p>
+            </div>
+            
+            <div class="visual-type-card">
+                <div class="visual-type-icon">🎨</div>
+                <h3 class="visual-type-title">Interface Designs</h3>
+                <p class="visual-type-description">
+                    UI/UX mockups, wireframes, and design artifacts from your coursework and projects
+                </p>
+            </div>
+            
+            <div class="visual-type-card">
+                <div class="visual-type-icon">📈</div>
+                <h3 class="visual-type-title">Data Visualizations</h3>
+                <p class="visual-type-description">
+                    Charts, graphs, and statistical analyses that demonstrate your research findings
+                </p>
+            </div>
+            
+            <div class="visual-type-card">
+                <div class="visual-type-icon">🏗️</div>
+                <h3 class="visual-type-title">System Architecture</h3>
+                <p class="visual-type-description">
+                    Technical architecture diagrams, workflow designs, and process maps
+                </p>
+            </div>
+        </div>
+        
+        <!-- Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <h3>📁 Upload Visual Content</h3>
+            <p>Drag and drop images from your PDF documents or click to browse</p>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                Choose Images
+            </button>
+        </div>
+        
+        <!-- Extraction Tips -->
+        <div class="extraction-tips">
+            <h3>💡 Tips for Clean Visual Examples</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <strong>📋 Crop Carefully</strong><br>
+                    Focus on specific diagrams, removing unnecessary text and borders
+                </div>
+                <div class="tip-item">
+                    <strong>🔍 High Quality</strong><br>
+                    Use high-resolution images that remain clear when scaled
+                </div>
+                <div class="tip-item">
+                    <strong>🎯 Clear Context</strong><br>
+                    Include enough context to understand the visual without explanation
+                </div>
+                <div class="tip-item">
+                    <strong>✨ Professional Look</strong><br>
+                    Choose clean, well-designed examples that reflect your expertise
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preview Grid -->
+        <div id="previewGrid" class="preview-grid hidden">
+            <!-- Uploaded images will appear here -->
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="index.html" class="nav-btn">← Back to Portfolio</a>
+            <a href="pdf-extractor.html" class="nav-btn">📄 PDF Text Extractor</a>
+        </div>
+    </div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            handleFiles(files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleFiles(files);
+        });
+        
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            previewGrid.classList.remove('hidden');
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    createPreviewItem(e.target.result, file.name, index);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function createPreviewItem(imageSrc, fileName, index) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            
+            // Determine visual type based on filename or provide default
+            const visualType = determineVisualType(fileName);
+            
+            previewItem.innerHTML = `
+                <img src="${imageSrc}" alt="${fileName}" class="preview-image">
+                <div class="preview-details">
+                    <div class="preview-title">${visualType.title}</div>
+                    <div class="preview-description">${visualType.description}</div>
+                    <div style="margin-top: 1rem;">
+                        <input type="text" placeholder="Add custom description..." 
+                               style="width: 100%; padding: 0.5rem; border: 1px solid #e5e5e5; border-radius: 4px;">
+                    </div>
+                    <button onclick="exportToPortfolio('${imageSrc}', '${fileName}')" 
+                            style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        📎 Add to Portfolio
+                    </button>
+                </div>
+            `;
+            
+            previewGrid.appendChild(previewItem);
+        }
+        
+        function determineVisualType(fileName) {
+            const name = fileName.toLowerCase();
+            
+            if (name.includes('interface') || name.includes('ui') || name.includes('wireframe')) {
+                return {
+                    title: 'Interface Design',
+                    description: 'UI/UX design mockup or wireframe'
+                };
+            } else if (name.includes('chart') || name.includes('graph') || name.includes('data')) {
+                return {
+                    title: 'Data Visualization',
+                    description: 'Research data analysis or statistical chart'
+                };
+            } else if (name.includes('architecture') || name.includes('system') || name.includes('flow')) {
+                return {
+                    title: 'System Architecture',
+                    description: 'Technical architecture or process flow diagram'
+                };
+            } else if (name.includes('method') || name.includes('framework') || name.includes('research')) {
+                return {
+                    title: 'Research Methodology',
+                    description: 'Academic research framework or methodology diagram'
+                };
+            } else {
+                return {
+                    title: 'Academic Visual',
+                    description: 'Research artifact from academic coursework'
+                };
+            }
+        }
+        
+        function exportToPortfolio(imageSrc, fileName) {
+            // Store image data for portfolio integration
+            const visualData = {
+                src: imageSrc,
+                name: fileName,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Store in localStorage for portfolio access
+            let portfolioVisuals = JSON.parse(localStorage.getItem('portfolioVisuals') || '[]');
+            portfolioVisuals.push(visualData);
+            localStorage.setItem('portfolioVisuals', JSON.stringify(portfolioVisuals));
+            
+            alert('✅ Visual example added to portfolio! You can now reference it in your project descriptions.');
+        }
+        
+        // Instructions for integration
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingVisuals = JSON.parse(localStorage.getItem('portfolioVisuals') || '[]');
+            if (existingVisuals.length > 0) {
+                console.log('📸 Portfolio visuals available:', existingVisuals.length);
+            }
+        });
+    </script>
+</body>
+</html>
